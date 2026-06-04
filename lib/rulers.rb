@@ -2,13 +2,25 @@
 
 require_relative "rulers/version"
 require_relative "rulers/array"
-
+require "rulers/version"
+require "rulers/routing"
 module Rulers
   class Error < StandardError; end
 
   class Application
-    def call(_env)
-      [200, { "content-type" => "text/html" }, ["Hello from Ruby on Rulers!"]]
+    def call(env)
+      klass, action = get_controller_and_action(env)
+      controller = klass.new(env)
+      text = controller.send(action)
+      [200, { "content-type" => "text/html" }, [text]]
     end
+  end
+
+  class Controller
+    def initialize(env)
+      @env = env
+    end
+
+    attr_reader :env
   end
 end
