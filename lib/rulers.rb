@@ -6,6 +6,7 @@ require "rulers/version"
 require "rulers/routing"
 require "rulers/util"
 require "rulers/dependencies"
+require "rulers/controller"
 module Rulers
   class Error < StandardError; end
 
@@ -16,7 +17,7 @@ module Rulers
       if env["PATH_INFO"] == "/favicon.ico"
         status = 404
       elsif env["PATH_INFO"] == "/"
-        body = [find_root_page(env)]
+        body = [File.read("public/index.html")]
       else
         klass, action = get_controller_and_action(env)
         controller = klass.new(env)
@@ -25,13 +26,9 @@ module Rulers
 
       [status, { "content-type" => "text/html" }, body]
     end
-  end
 
-  class Controller
-    def initialize(env)
-      @env = env
+    def self.framework_root
+      __dir__
     end
-
-    attr_reader :env
   end
 end

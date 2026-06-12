@@ -5,4 +5,3 @@ require "rulers"
 require "rack/test"
 
 require "minitest/autorun"
-

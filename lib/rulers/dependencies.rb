@@ -1,11 +1,12 @@
 class Object
-  def self.const_missing(_const_name)
-    return nil if @calling_const_missing
+  def self.const_missing(const_name)
+    @calling_const_missing ||= {}
+    return nil if @calling_const_missing[const_name]
 
-    @calling_const_missing = true
-    require Rulers.to_underscore(c.to_s)
-    klass = Object.const_get(c)
-    @calling_const_missing = false
+    @calling_const_missing[const_name] = true
+    require Rulers.to_underscore(const_name.to_s)
+    klass = Object.const_get(const_name)
+    @calling_const_missing[const_name] = false
     klass
   end
 end

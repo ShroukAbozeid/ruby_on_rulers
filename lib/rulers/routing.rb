@@ -8,11 +8,5 @@ module Rulers
       cont += "Controller"
       [Object.const_get(cont), action]
     end
-
-    def find_root_page(env)
-      Object.const_get("HomeController").new(env).send("index")
-    rescue NameError
-      Object.const_get("PagesController").new(env).send("home")
-    end
   end
 end
