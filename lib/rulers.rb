@@ -8,7 +8,7 @@ require "rulers/util"
 require "rulers/dependencies"
 require "rulers/controller"
 require "rulers/file_model"
-
+require "rulers/view"
 module Rulers
   class Error < StandardError; end
 
@@ -16,6 +16,7 @@ module Rulers
     def call(env)
       status = 200
       body = []
+      headers = { "content-type" => "text/html" }
       if env["PATH_INFO"] == "/favicon.ico"
         status = 404
       elsif env["PATH_INFO"] == "/"
@@ -24,9 +25,15 @@ module Rulers
         klass, action = get_controller_and_action(env)
         controller = klass.new(env)
         body = [controller.send(action)]
+        res = controller.get_response
+        if res
+          status = res.status
+          headers = res.headers
+          body = [res.body].flatten
+        end
       end
 
-      [status, { "content-type" => "text/html" }, body]
+      [status, headers, body]
     end
 
     def self.framework_root
