@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 require "erubis"
+require "rulers/file_model"
 
 module Rulers
   class Controller
+    include Rulers::Model
     def initialize(env)
       @env = env
     end

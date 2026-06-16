@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest"
   spec.add_development_dependency "rack-test"
   spec.add_dependency "erubis"
+  spec.add_dependency "multi_json"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
