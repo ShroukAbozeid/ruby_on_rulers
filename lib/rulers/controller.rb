@@ -2,6 +2,7 @@
 
 require "erubis"
 require "rulers/file_model"
+require "rack"
 
 module Rulers
   class Controller
@@ -52,7 +53,6 @@ module Rulers
     def response(text, status = 200, headers = {})
       raise "Already responded" if @response
 
-      # not working undefined constant Rack::Response
       @response = Rack::Response.new([text].flatten, status, headers)
     end
 
