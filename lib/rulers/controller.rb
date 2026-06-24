@@ -9,9 +9,25 @@ module Rulers
     include Rulers::Model
     def initialize(env)
       @env = env
+      @routing_params = {}
     end
 
     attr_reader :env
+
+    def dispatch(action, routing_params = {})
+      @routing_params = routing_params
+      text = send(action)
+      r = get_response
+      if r
+        [r.status, r.headers, [r.body].flatten]
+      else
+        [200, { "content-type" => "text/html" }, [text].flatten]
+      end
+    end
+
+    def self.action(act, res = {})
+      proc { |e| new(e).dispatch(act, res) }
+    end
 
     def render(view_name, _locals = {})
       filename = File.join(
@@ -65,7 +81,7 @@ module Rulers
     end
 
     def params
-      request.params
+      request.params.merge(@routing_params)
     end
   end
 end
